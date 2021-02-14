@@ -429,6 +429,11 @@ kareem@2.3.2:
   resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.3.2.tgz#78c4508894985b8d38a0dc15e1a8e11078f2ca93"
   integrity sha512-STHz9P7X2L4Kwn72fA4rGyqyXdmrMSdxqHx9IXon/FXluXieaFA6KJ2upcHAHxQPQ0LeM/OjLrhFxifHewOALQ==
 
+luxon@^1.26.0:
+  version "1.26.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.26.0.tgz#d3692361fda51473948252061d0f8561df02b578"
+  integrity sha512-+V5QIQ5f6CDXQpWNICELwjwuHdqeJM1UenlZWx5ujcRMc9venvluCjFb4t5NYLhb6IhkbMVOxzVuOqkgMxee2A==
+
 media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"

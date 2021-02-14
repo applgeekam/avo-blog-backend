@@ -25,7 +25,7 @@ router.post('/signup', ((req, res) => {
     User.create(req.body.name,req.body.email, req.body.password, (err, token) => {
         if (err)
         {
-            res.status(500).send("Sign in failed. Try again")
+            res.status(500).send("Sign in failed. Try again. Error : " + err)
         }
         else
         {

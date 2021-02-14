@@ -1,5 +1,6 @@
 let mongoose = require('mongoose')
 let bcrypt = require("bcrypt")
+let luxon = require("luxon")
 const UIDGenerator = require('uid-generator');
 const uidgen = new UIDGenerator(UIDGenerator.BASE58); // Default is a 128-bit UID encoded in base58
 
@@ -12,16 +13,19 @@ class User {
 
         // Todo Check if this user exist before
 
-        let model = new mongoose.model("User")()
-        model.name = name
-        model.email = email
-        model.date = Date.now()
+        let user = new mongoose.model("User")()
+        user.name = name
+        user.email = email
+        user.date = luxon.DateTime.now()
 
         this.hashPwd(pwd,  (hash) => {
-            model.pwd = hash
+            user.pwd = hash
             this.tokenGenerator((token) => {
-                model.token = token
-                model.save((err, doc) => {
+                user.token = {
+                    value: token,
+                    expiration: luxon.DateTime.now().plus(luxon.Duration.fromObject({ hours: 2}))
+                }
+                user.save((err, doc) => {
                     cb(err, token)
                 })
             })

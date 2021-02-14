@@ -6,15 +6,15 @@ module.exports = function initConnectionDB()
         if (!error)
         {
             console.log("Connection success")
+
+            const InitDBSchema = require("./models/schema")
+
+            InitDBSchema()
         }
         else
         {
-            console.log("Connection failed")
+            console.log("Connection failed. Error: " + error)
         }
     })
-
-    const InitDBSchema = require("./models/schema")
-
-    InitDBSchema()
 
 }

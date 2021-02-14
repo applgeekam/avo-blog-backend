@@ -4,6 +4,8 @@ let app = express()
 let authMiddleware = require("./middlewares/auth")
 let initConnectionDb = require("./connectionDB")
 
+const PORT = 5000
+
 // Middlewares
 app.use('/assets', express.static('public'))
 app.use('/images', express.static('public/images'))
@@ -34,5 +36,7 @@ app.use("/user", require('./controllers/user'))
 app.post("/comment", authMiddleware, (req, res) => {})
 app.post("/reply/:id", authMiddleware, (req, res) => {})
 
-app.listen(8180)
+app.listen(PORT, () =>{
+    console.log("Server running on " + PORT + " !")
+})
 
