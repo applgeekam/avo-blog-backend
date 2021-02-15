@@ -24,16 +24,8 @@ let Article = mongoose.Schema({
 })
 
 let ArticleContent = mongoose.Schema({
-    comments : [
-        {
-            users_id:  mongoose.Schema.Types.ObjectId,
-            users_name: String,
-            dateAdd: Date,
-            message: String,
-            reply: Array,
-        }
-    ],
-    tags: String,
+    comments : Array,
+    tags: Array,
     section: [
         {
             title: String,
@@ -49,8 +41,18 @@ let ArticleContent = mongoose.Schema({
     ],
 })
 
+let Comment = mongoose.Schema({
+    users_id:  mongoose.Schema.Types.ObjectId,
+    articles_id:  mongoose.Schema.Types.ObjectId,
+    users_name: String,
+    dateAdd: Date,
+    message: String,
+    reply: Array,
+})
+
 module.exports = function initSchema() {
     mongoose.model("user", User);
     mongoose.model("article_content", ArticleContent);
     mongoose.model("article", Article);
+    mongoose.model("comment", Comment);
 }

@@ -28,7 +28,7 @@ router.get("/", (req, res) => {
 })
 
 router.get("/:slug", (req, res) => {
-    let slug = req.params.slug
+    let slug = req.params.slug ?? ""
     if (slug.length === 0 || typeof slug !== 'string')
     {
         res.json({
@@ -55,7 +55,7 @@ router.get("/:slug", (req, res) => {
 })
 
 router.get("/:id/like", (req, res) => {
-    let id = req.params.id
+    let id = req.params.id ?? ""
     Articles.like(id, (msg, success) => {
         res.json({
             status: {
@@ -68,7 +68,7 @@ router.get("/:id/like", (req, res) => {
 })
 
 router.get("/:id/unlike", (req, res) => {
-    let id = req.params.id
+    let id = req.params.id ?? ""
     Articles.unlike(id, (msg, success) => {
         res.json({
             status: {

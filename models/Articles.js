@@ -62,7 +62,6 @@ class Articles {
 
     }
 
-
     static like(id, cb)
     {
         let model = new db.model("article")

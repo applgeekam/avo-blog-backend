@@ -1,7 +1,6 @@
 let express = require('express')
 let bodyParser = require('body-parser')
 let app = express()
-let authMiddleware = require("./middlewares/auth")
 let initConnectionDb = require("./connectionDB")
 
 const PORT = 5000
@@ -33,8 +32,7 @@ app.use("/user", require('./controllers/user'))
 
 // Authenticated routes
 
-app.post("/comment", authMiddleware, (req, res) => {})
-app.post("/reply/:id", authMiddleware, (req, res) => {})
+app.use('/comment', require('./controllers/comment'))
 
 app.listen(PORT, () =>{
     console.log("Server running on " + PORT + " !")
