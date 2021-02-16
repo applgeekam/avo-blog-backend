@@ -1,4 +1,4 @@
-
+require('dotenv').config();
 let db = require('mongoose')
 let bcrypt = require("bcrypt")
 let luxon = require("luxon")
@@ -32,7 +32,7 @@ class User {
                     this.tokenGenerator((token) => {
                         user.token = {
                             value: token,
-                            expiration: luxon.DateTime.now().plus(luxon.Duration.fromObject({ hours: 2}))
+                            expiration: luxon.DateTime.now().plus(luxon.Duration.fromObject({ minutes: process.env.TOKEN_SESSION_DURATION}))
                         }
                         user.save((err, doc) => {
                             cb(true, "", token)
@@ -80,7 +80,7 @@ class User {
                                     { _id: user._id },
                                     [ { $set: {
                                             "token.value": token,
-                                            "token.expiration": luxon.DateTime.now().plus(luxon.Duration.fromObject({ hours: 2}))
+                                            "token.expiration": luxon.DateTime.now().plus(luxon.Duration.fromObject({ minutes: process.env.TOKEN_SESSION_DURATION}))
                                         }}],
                                     error => {
                                         if (error)

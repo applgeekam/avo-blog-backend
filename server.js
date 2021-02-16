@@ -2,11 +2,12 @@ let express = require('express')
 let bodyParser = require('body-parser')
 let app = express()
 let initConnectionDb = require("./connectionDB")
+require('dotenv').config();
 
-const PORT = 5000
+
+const PORT = process.env.PORT
 
 // Middlewares
-app.use('/assets', express.static('public'))
 app.use('/images', express.static('public/images'))
 app.use(bodyParser.urlencoded({ extended : false}))
 app.use(bodyParser.json())

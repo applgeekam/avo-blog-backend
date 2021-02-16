@@ -1,5 +1,6 @@
 let db = require('mongoose')
 let luxon = require("luxon")
+require('dotenv').config();
 
 
 module.exports = function (request, response, next) {
@@ -48,7 +49,7 @@ module.exports = function (request, response, next) {
             if (i > 0)
             {
                 model.updateOne( { _id: user._id },
-                [ { $set: { "token.expiration": luxon.DateTime.fromJSDate(user.token.expiration).plus(luxon.Duration.fromObject({ minutes: 1})).toLocal() }}], error => {
+                [ { $set: { "token.expiration": luxon.DateTime.fromJSDate(user.token.expiration).plus(luxon.Duration.fromObject({ minutes: process.env.TOKEN_REFRESH_TIME})).toLocal() }}], error => {
                         if (error)
                         {
                             response.json({
