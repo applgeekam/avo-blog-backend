@@ -3,44 +3,96 @@ const router = express.Router();
 let User = require('../models/User')
 let biblio = require('../biblio')
 
-// const token = req.header("authorization");
-
 
 router.post('/login', ((req, res) => {
+    let email = req.body.email ?? ""
+    let password = req.body.password ?? ""
 
+    if (!biblio.ValidateEmail(email))
+    {
+        res.json({
+            status: {
+                success : false,
+                message: " Email is invalid. "
+            },
+            data: null
+        }).send()
+    }
+    else{
+        User.connect(email, password,(success, msg, data) => {
+            res.json({
+                status: {
+                    success : success,
+                    message: msg
+                },
+                data: data
+            }).send()
+        } )
+
+    }
 }))
-
 
 router.post('/signup', ((req, res) => {
 
-    let response = {}
+    let email = req.body.email ?? ""
+    let name = req.body.name ?? ""
+    let password = req.body.password ?? ""
 
-    // Todo check if data is valid before
-    if (!biblio.ValidateEmail(req.body.email))
+    if (!biblio.ValidateEmail(email))
     {
-        response.status.type = "error"
-        response.status.message = " Email invalide. "
+        res.json({
+            status: {
+                success : false,
+                message: " Email is invalid. "
+            },
+            data: null
+        }).send()
     }
-
-    User.create(req.body.name,req.body.email, req.body.password, (err, token) => {
-        if (err)
-        {
-            res.status(500).send("Sign in failed. Try again. Error : " + err)
-        }
-        else
-        {
+    else if (password.length < 8){
+        res.json({
+            status: {
+                success : false,
+                message: "Password must contain at least 8 characters "
+            },
+            data: null
+        }).send()
+    }
+    else if (name.length === 0){
+        res.json({
+            status: {
+                success : false,
+                message: "Name field is empty"
+            },
+            data: null
+        }).send()
+    }
+    else{
+        User.create(name, email, password, (success, msg, data) => {
             res.json({
                 status: {
-                    type : "success",
-                    message: "User sign in"
+                    success : success,
+                    message: msg
                 },
-                token
+                data: data
             }).send()
-        }
-    } )
+        } )
+
+    }
+
+
 }))
 
 router.post('/logout', ((req, res) => {
-
+    const token = req.header("authorization").split(" ")[1]
+    User.disconnect(token, (success, msg, data) => {
+        res.json({
+            status: {
+                success : success,
+                message: msg
+            },
+            data: data
+        }).send()
+    } )
 }))
+
 module.exports = router;
