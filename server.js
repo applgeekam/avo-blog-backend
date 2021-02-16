@@ -17,12 +17,7 @@ app.get("/", (req, res) => {
     res.send("Welcome on Avo Blog API.")
 })
 
-// todo fill db with generator data
-// Todo Manage guest route
-// Todo check if data send is valid before : create a middleware
-// Todo check if data send exist before
-// Todo Manage authenticated route
-// Todo Manage authenticated middleware route
+// Todo define env variable for token session and port
 
 app.use("/article", require('./controllers/article'))
 

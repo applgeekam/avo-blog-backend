@@ -12,12 +12,10 @@ class User {
 
     static create(name, email, pwd, cb){
 
-        // Todo Check if this user exist before
         let model = new db.model("user")
         model.find({
             email : email
         }).exec((err, user) => {
-            console.log(user)
             if (err)
             {
                 cb(false, "Something goes wrong on db. Error: " + err, null)
@@ -29,7 +27,6 @@ class User {
                 user.name = name
                 user.email = email
                 user.date = luxon.DateTime.now()
-
                 this.hashPwd(pwd,  (hash) => {
                     user.password = hash
                     this.tokenGenerator((token) => {
@@ -53,7 +50,6 @@ class User {
 
     static connect(email, pwd, cb) {
 
-        // Todo Check if this user exist before
         let model = new db.model("user")
         model.find({
             email
@@ -75,26 +71,27 @@ class User {
                 else {
 
                     this.comparePwd(pwd, user.password, (result) => {
+
                         if (result){
 
                             this.tokenGenerator((token) => {
 
-                                model.findById(user._id, (err, user) => {
-                                    if (err)
-                                    {
-                                        cb(false, "Something goes wrong on db. Error: " + err, null)
-                                    }
-                                    else {
-                                        user.token = {
-                                            value: token,
-                                            expiration: luxon.DateTime.now().plus(luxon.Duration.fromObject({ hours: 2}))
+                                model.updateOne(
+                                    { _id: user._id },
+                                    [ { $set: {
+                                            "token.value": token,
+                                            "token.expiration": luxon.DateTime.now().plus(luxon.Duration.fromObject({ hours: 2}))
+                                        }}],
+                                    error => {
+                                        if (error)
+                                        {
+                                            cb(false, "Something goes wrong on db. Error: " + err, null)
                                         }
-                                        user.save((err, doc) => {
+                                        else {
                                             cb(true, "Connected successfully !", token)
-                                        })
+                                        }
                                     }
-                                })
-
+                                )
                             })
                         }
                         else {
@@ -123,21 +120,22 @@ class User {
                 cb(false, "User not exist. Please Sign up.", null)
             }
             else {
-                model.findById(user[0]._id, (err, user) => {
-                    if (err)
-                    {
-                        cb(false, "Something goes wrong on db. Error: " + err, null)
-                    }
-                    else {
-                        user.token = {
-                            value: "",
-                            expiration: null
+                model.updateOne(
+                    { _id: user._id },
+                    [ { $set: {
+                        "token.value": "",
+                        "token.expiration": null
+                    }}],
+                    error => {
+                        if (error)
+                        {
+                            cb(false, "Something goes wrong on db. Error: " + err, null)
                         }
-                        user.save((err, doc) => {
+                        else {
                             cb(true, "Disconnected successfully !", null)
-                        })
+                        }
                     }
-                })
+                )
             }
         })
     }

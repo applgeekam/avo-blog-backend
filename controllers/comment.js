@@ -1,11 +1,13 @@
 let express = require('express')
 let db = require('mongoose')
+let { DateTime } = require("luxon")
+DateTime.utc().toLocal();
+
 
 let authMiddleware = require("../middlewares/auth")
 let Comment = require("../models/Comment")
 
 const router = express.Router();
-
 
 router.post("/", authMiddleware, (req, res) => {
     let comment = {
@@ -22,7 +24,7 @@ router.post("/", authMiddleware, (req, res) => {
                 message: "Article id is invalid"
             },
             data: null
-        }).send()
+        })
     }
     else if (!db.Types.ObjectId.isValid(comment.user_id))
     {
@@ -32,7 +34,7 @@ router.post("/", authMiddleware, (req, res) => {
                 message: "User id is invalid"
             },
             data: null
-        }).send()
+        })
     }
     else if (comment.message.length === 0)
     {
@@ -42,7 +44,7 @@ router.post("/", authMiddleware, (req, res) => {
                 message: "Message is empty."
             },
             data: null
-        }).send()
+        })
     }
     else
     {
@@ -50,7 +52,7 @@ router.post("/", authMiddleware, (req, res) => {
             comment.article_id,
             comment.user_id,
             comment.message,
-            Date.now(),
+            DateTime.now(),
             (success, msg, data) => {
                 res.json({
                     status: {
@@ -58,13 +60,13 @@ router.post("/", authMiddleware, (req, res) => {
                         message: msg
                     },
                     data: data
-                }).send()
+                })
             }
         )
     }
 })
 
-router.get("/:id", (req , res) => {
+router.get("/:id", authMiddleware, (req , res) => {
     let id = req.params.id ?? ""
     if (!db.Types.ObjectId.isValid(id))
     {
@@ -74,7 +76,7 @@ router.get("/:id", (req , res) => {
                 message: "Comment id is invalid"
             },
             data: null
-        }).send()
+        })
     }
     else
     {
@@ -85,7 +87,7 @@ router.get("/:id", (req , res) => {
                     message: msg
                 },
                 data: article
-            }).send()
+            })
         })
     }
 })
@@ -106,7 +108,7 @@ router.post("/reply/:id", authMiddleware, (req, res) => {
                 message: "Article id is invalid"
             },
             data: null
-        }).send()
+        })
     }
     else if (!db.Types.ObjectId.isValid(comment.user_id))
     {
@@ -116,7 +118,7 @@ router.post("/reply/:id", authMiddleware, (req, res) => {
                 message: "User id is invalid"
             },
             data: null
-        }).send()
+        })
     }
     else if (!db.Types.ObjectId.isValid(comment.reply_id))
     {
@@ -126,7 +128,7 @@ router.post("/reply/:id", authMiddleware, (req, res) => {
                 message: "Comment's id you want to reply to is invalid"
             },
             data: null
-        }).send()
+        })
     }
     else if (comment.message.length === 0)
     {
@@ -136,7 +138,7 @@ router.post("/reply/:id", authMiddleware, (req, res) => {
                 message: "Message is empty."
             },
             data: null
-        }).send()
+        })
     }
     else
     {
@@ -145,7 +147,7 @@ router.post("/reply/:id", authMiddleware, (req, res) => {
             comment.user_id,
             comment.message,
             comment.reply_id,
-            Date.now(),
+            DateTime.now(),
             (success, msg, data) => {
                 res.json({
                     status: {
@@ -153,7 +155,7 @@ router.post("/reply/:id", authMiddleware, (req, res) => {
                         message: msg
                     },
                     data: data
-                }).send()
+                })
             }
         )
     }

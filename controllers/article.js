@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
                     message: "Error + " + err
                 },
                 data: null
-            }).send()
+            })
         }
         else {
             res.json({
@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
                     message: ""
                 },
                 data: articles
-            }).send()
+            })
         }
     })
 })
@@ -37,7 +37,7 @@ router.get("/:slug", (req, res) => {
                 message: "Article slug is invalid"
             },
             data: null
-        }).send()
+        })
     }
     else
     {
@@ -48,7 +48,7 @@ router.get("/:slug", (req, res) => {
                     message: msg
                 },
                 data: article
-            }).send()
+            })
         })
     }
 
@@ -63,7 +63,7 @@ router.get("/:id/like", (req, res) => {
                 message: msg
             },
             data: null
-        }).send()
+        })
     })
 })
 
@@ -76,7 +76,7 @@ router.get("/:id/unlike", (req, res) => {
                 message: msg
             },
             data: null
-        }).send()
+        })
     })
 })
 

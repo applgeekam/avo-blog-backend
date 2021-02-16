@@ -16,7 +16,7 @@ router.post('/login', ((req, res) => {
                 message: " Email is invalid. "
             },
             data: null
-        }).send()
+        })
     }
     else{
         User.connect(email, password,(success, msg, data) => {
@@ -26,7 +26,7 @@ router.post('/login', ((req, res) => {
                     message: msg
                 },
                 data: data
-            }).send()
+            })
         } )
 
     }
@@ -46,7 +46,7 @@ router.post('/signup', ((req, res) => {
                 message: " Email is invalid. "
             },
             data: null
-        }).send()
+        })
     }
     else if (password.length < 8){
         res.json({
@@ -55,7 +55,7 @@ router.post('/signup', ((req, res) => {
                 message: "Password must contain at least 8 characters "
             },
             data: null
-        }).send()
+        })
     }
     else if (name.length === 0){
         res.json({
@@ -64,7 +64,7 @@ router.post('/signup', ((req, res) => {
                 message: "Name field is empty"
             },
             data: null
-        }).send()
+        })
     }
     else{
         User.create(name, email, password, (success, msg, data) => {
@@ -74,7 +74,7 @@ router.post('/signup', ((req, res) => {
                     message: msg
                 },
                 data: data
-            }).send()
+            })
         } )
 
     }
@@ -91,7 +91,7 @@ router.post('/logout', ((req, res) => {
                 message: msg
             },
             data: data
-        }).send()
+        })
     } )
 }))
 
