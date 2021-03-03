@@ -111,27 +111,15 @@ class Comment {
                                 cb(false, "Something goes wrong on db. Error: " + err, null)
                             }
                             else {
-
-                                modelArticleContent.updateOne( { _id: article._article_content_id },
-                                    [ { $set: { comments : { $concatArrays: [ "$comments", [ doc._id ]  ] } } } ],
+                                modelComment.updateOne( { _id: reply_id },
+                                    [ { $set: { reply : { $concatArrays: [ "$reply", [ doc._id ]  ] } } } ],
                                     (error) => {
                                         if (error)
                                         {
                                             cb(false, "Something goes wrong on db. Error: " + err, null)
                                         }
                                         else {
-                                            modelComment.updateOne( { _id: reply_id },
-                                                [ { $set: { reply : { $concatArrays: [ "$reply", [ doc._id ]  ] } } } ],
-                                                (error) => {
-                                                    if (error)
-                                                    {
-                                                        cb(false, "Something goes wrong on db. Error: " + err, null)
-                                                    }
-                                                    else {
-                                                        cb(true, "Comment reply saved.", null)
-                                                    }
-                                                }
-                                            )
+                                            cb(true, "Comment reply saved.", null)
                                         }
                                     }
                                 )

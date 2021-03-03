@@ -8,11 +8,19 @@ require('dotenv').config();
 const PORT = process.env.PORT
 
 // Middlewares
-app.use('/images', express.static('public/images'))
+app.use('/image', express.static('public/image'))
 app.use(bodyParser.urlencoded({ extended : false}))
 app.use(bodyParser.json())
 initConnectionDb()
 // Routes
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header("Access-Control-Allow-Credentials", "true")
+    res.header("Access-Control-Allow-Methods", "GET,POST")
+    res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization")
+    next()
+})
 
 app.get("/", (req, res) => {
     res.send("Welcome on Avo Blog API.")

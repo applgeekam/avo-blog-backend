@@ -34,8 +34,8 @@ class User {
                             value: token,
                             expiration: luxon.DateTime.now().plus(luxon.Duration.fromObject({ minutes: process.env.TOKEN_SESSION_DURATION}))
                         }
-                        user.save((err, doc) => {
-                            cb(true, "", token)
+                        user.save((doc) => {
+                            cb(true, "", {token, name, id : user._id})
                         })
                     })
                 })
@@ -88,7 +88,7 @@ class User {
                                             cb(false, "Something goes wrong on db. Error: " + err, null)
                                         }
                                         else {
-                                            cb(true, "Connected successfully !", token)
+                                            cb(true, "Connected successfully !", {token, name: user.name, id: user._id })
                                         }
                                     }
                                 )
@@ -105,11 +105,11 @@ class User {
 
     }
 
-    static disconnect(token, cb){
+    static disconnect(id, cb){
 
         let model = new db.model("user")
         model.find({
-            "token.value" : token
+            _id : id
         }).exec((err, user) => {
             if (err)
             {
@@ -120,6 +120,7 @@ class User {
                 cb(false, "User not exist. Please Sign up.", null)
             }
             else {
+                user = user[0]
                 model.updateOne(
                     { _id: user._id },
                     [ { $set: {

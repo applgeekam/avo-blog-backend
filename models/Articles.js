@@ -24,6 +24,7 @@ class Articles {
                 modelArticleContent.find({
                     _id: article._article_content_id
                 }).exec((err, content) => {
+                    content = content[0]
                     article = { article, content}
                     cb(true, "", article)
                 })
@@ -34,27 +35,24 @@ class Articles {
         })
     }
 
-    static unlike(id, cb)
+    static like(article_id, user_id, cb)
     {
         let model = new db.model("article")
-        if (db.Types.ObjectId.isValid(id))
+
+        if (db.Types.ObjectId.isValid(article_id))
         {
-            model.findById(id, (err, article) => {
-                if (err)
-                {
-                    cb("Something goes wrong on db. Error: " + err, false)
+            model.updateOne( { _id: article_id },
+                { $push: { like : user_id}},
+                (error) => {
+                    if (error)
+                    {
+                        cb("Something goes wrong on db. Error: " + err, false)
+                    }
+                    else {
+                        cb("Article liked.", true)
+                    }
                 }
-                else if(article === null)
-                {
-                    cb(" Article not found ", false)
-                }
-                else {
-                    article.like--
-                    article.save((err) => {
-                        cb("Article unliked.", true)
-                    })
-                }
-            })
+            )
         }
         else{
             cb("Article id is invalid", false)
@@ -62,27 +60,24 @@ class Articles {
 
     }
 
-    static like(id, cb)
+    static unlike(article_id, user_id, cb)
     {
         let model = new db.model("article")
-        if (db.Types.ObjectId.isValid(id))
+
+        if (db.Types.ObjectId.isValid(article_id))
         {
-            model.findById(id, (err, article) => {
-                if (err)
-                {
-                    cb("Something goes wrong on db. Error: " + err, false)
+            model.updateOne( { _id: article_id },
+                { $pullAll: { like: [ user_id ] } },
+                (error) => {
+                    if (error)
+                    {
+                        cb("Something goes wrong on db. Error: " + error, false)
+                    }
+                    else {
+                        cb("Article unliked.", true)
+                    }
                 }
-                else if(article === null)
-                {
-                    cb(" Article not found ", false)
-                }
-                else {
-                    article.like--
-                    article.save((err) => {
-                        cb("Article liked.", true)
-                    })
-                }
-            })
+            )
         }
         else{
             cb("Article id is invalid", false)

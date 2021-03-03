@@ -1,7 +1,11 @@
 let express = require('express')
 const router = express.Router();
 
+let authMiddleware = require("../middlewares/auth")
+
+
 let Articles = require("../models/Articles")
+
 
 router.get("/", (req, res) => {
     Articles.getAll((err, articles) =>{
@@ -10,7 +14,7 @@ router.get("/", (req, res) => {
             res.json({
                 status: {
                     success : false,
-                    message: "Error + " + err
+                    message: "Error : " + err
                 },
                 data: null
             })
@@ -28,7 +32,7 @@ router.get("/", (req, res) => {
 })
 
 router.get("/:slug", (req, res) => {
-    let slug = req.params.slug ?? ""
+    let slug = req.params.slug ? req.params.slug : ""
     if (slug.length === 0 || typeof slug !== 'string')
     {
         res.json({
@@ -54,9 +58,10 @@ router.get("/:slug", (req, res) => {
 
 })
 
-router.get("/:id/like", (req, res) => {
-    let id = req.params.id ?? ""
-    Articles.like(id, (msg, success) => {
+router.post("/:id/like", authMiddleware,  (req, res) => {
+    let article_id = req.params.id ? req.params.id : ""
+    let user_id = req.body.id ? req.body.id : ""
+    Articles.like(article_id, user_id, (msg, success) => {
         res.json({
             status: {
                 success : success,
@@ -67,9 +72,10 @@ router.get("/:id/like", (req, res) => {
     })
 })
 
-router.get("/:id/unlike", (req, res) => {
-    let id = req.params.id ?? ""
-    Articles.unlike(id, (msg, success) => {
+router.post("/:id/unlike", authMiddleware, (req, res) => {
+    let article_id = req.params.id ? req.params.id : ""
+    let user_id = req.body.id ? req.body.id : ""
+    Articles.unlike(article_id, user_id, (msg, success) => {
         res.json({
             status: {
                 success : success,

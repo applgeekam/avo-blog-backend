@@ -5,15 +5,20 @@ DateTime.utc().toLocal();
 
 
 let authMiddleware = require("../middlewares/auth")
+
+// let authMiddleware = (req, res, next) => {
+//     next()
+// }
+
 let Comment = require("../models/Comment")
 
 const router = express.Router();
 
 router.post("/", authMiddleware, (req, res) => {
     let comment = {
-        article_id : req.body.article ?? "",
-        user_id : req.body.user ?? "",
-        message: req.body.message ?? "",
+        article_id : req.body.article ? req.body.article : "",
+        user_id : req.body.user ? req.body.user : ""  ,
+        message: req.body.message ?  req.body.message : "" ,
     }
 
     if (!db.Types.ObjectId.isValid(comment.article_id))
@@ -66,8 +71,8 @@ router.post("/", authMiddleware, (req, res) => {
     }
 })
 
-router.get("/:id", authMiddleware, (req , res) => {
-    let id = req.params.id ?? ""
+router.get("/:id", (req , res) => {
+    let id = req.params.id ? req.params.id : ""
     if (!db.Types.ObjectId.isValid(id))
     {
         res.json({
@@ -80,13 +85,13 @@ router.get("/:id", authMiddleware, (req , res) => {
     }
     else
     {
-        Comment.getOne(id, (success, msg, article) =>{
+        Comment.getOne(id, (success, msg, comment) =>{
             res.json({
                 status: {
                     success : success,
                     message: msg
                 },
-                data: article
+                data: comment
             })
         })
     }
@@ -94,10 +99,10 @@ router.get("/:id", authMiddleware, (req , res) => {
 
 router.post("/reply/:id", authMiddleware, (req, res) => {
     let comment = {
-        article_id : req.body.article ?? "",
-        user_id : req.body.user ?? "",
-        message: req.body.message ?? "",
-        reply_id: req.params.id ?? ""
+        article_id : req.body.article ? req.body.article : "" ,
+        user_id : req.body.user ? req.body.user : "" ,
+        message: req.body.message ? req.body.message : "" ,
+        reply_id: req.params.id ?  req.params.id : ""
     }
 
     if (!db.Types.ObjectId.isValid(comment.article_id))

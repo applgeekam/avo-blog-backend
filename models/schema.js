@@ -16,9 +16,10 @@ let User = mongoose.Schema({
 let Article = mongoose.Schema({
     title: String,
     author: String,
+    tags: Array,
     slug: String,
     resume: String,
-    like: Number,
+    like: Array,
     dateAdd: Date,
     datePub: Date,
     img: String,
@@ -27,7 +28,6 @@ let Article = mongoose.Schema({
 
 let ArticleContent = mongoose.Schema({
     comments : Array,
-    tags: Array,
     section: [
         {
             title: String,

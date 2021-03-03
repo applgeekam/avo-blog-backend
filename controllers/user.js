@@ -2,11 +2,12 @@ let express = require('express')
 const router = express.Router();
 let User = require('../models/User')
 let biblio = require('../biblio')
+let authMiddleware = require("../middlewares/auth")
 
 
 router.post('/login', ((req, res) => {
-    let email = req.body.email ?? ""
-    let password = req.body.password ?? ""
+    let email = req.body.email ? req.body.email : ""
+    let password = req.body.password ? req.body.password : ""
 
     if (!biblio.ValidateEmail(email))
     {
@@ -34,9 +35,10 @@ router.post('/login', ((req, res) => {
 
 router.post('/signup', ((req, res) => {
 
-    let email = req.body.email ?? ""
-    let name = req.body.name ?? ""
-    let password = req.body.password ?? ""
+    let email = req.body.email ? req.body.email : ""
+    let password = req.body.password ? req.body.password : ""
+    let name = req.body.name ? req.body.name : ""
+
 
     if (!biblio.ValidateEmail(email))
     {
@@ -82,9 +84,9 @@ router.post('/signup', ((req, res) => {
 
 }))
 
-router.post('/logout', ((req, res) => {
-    const token = req.header("authorization").split(" ")[1]
-    User.disconnect(token, (success, msg, data) => {
+router.post('/logout', authMiddleware, ((req, res) => {
+    const id =  req.body.id ? req.body.id : ""
+    User.disconnect(id, (success, msg, data) => {
         res.json({
             status: {
                 success : success,
