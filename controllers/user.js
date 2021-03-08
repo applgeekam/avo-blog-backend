@@ -2,7 +2,6 @@ let express = require('express')
 const router = express.Router();
 let User = require('../models/User')
 let biblio = require('../biblio')
-let authMiddleware = require("../middlewares/auth")
 
 
 router.post('/login', ((req, res) => {
@@ -84,7 +83,7 @@ router.post('/signup', ((req, res) => {
 
 }))
 
-router.post('/logout', authMiddleware, ((req, res) => {
+router.post('/logout', ((req, res) => {
     const id =  req.body.id ? req.body.id : ""
     User.disconnect(id, (success, msg, data) => {
         res.json({

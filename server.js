@@ -26,7 +26,6 @@ app.get("/", (req, res) => {
     res.send("Welcome on Avo Blog API.")
 })
 
-// Todo define env variable for token session and port
 
 app.use("/article", require('./controllers/article'))
 
